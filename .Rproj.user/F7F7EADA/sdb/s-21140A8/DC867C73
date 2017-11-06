@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "---\ntitle: \"IODS course project\"\noutput:\n  html_document:\n    theme: cosmo\n    toc: true\n    toc_depth: 2\n    fig_caption: true\n    fig_width: 6\n    fig_height: 4\n    code_folding: hide\nauthor: \"Juho Pirhonen\"\n---\n\n***\n  \n```{r child = \"chapter1.Rmd\"}\n```\n  \n***\n  \n```{r child = \"chapter2.Rmd\"}\n```\n\n***\n",
+    "created" : 1509961565524.000,
+    "dirty" : true,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2283689462",
+    "id" : "DC867C73",
+    "lastKnownWriteTime" : 1509457511,
+    "last_content_update" : 1509961582766,
+    "path" : "~/Desktop/IODS/IODS-project/index.Rmd",
+    "project_path" : "index.Rmd",
+    "properties" : {
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}
