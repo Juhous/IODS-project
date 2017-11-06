@@ -1,9 +1,9 @@
 
-# About the project
+# About the website
 
-https://github.com/Juhous/IODS-project
+This is website serves as a course diary for a Uni. Helsinki course Introduction to Open Data Science (IODS)
 
-This is the first excercise of IODS-course. 
+## Code repository
 
+The _R-code_ used is stored and available for inspection in  [this GitHub repository](https://github.com/Juhous/IODS-project)
 
-*Write a short description about the course and add a link to your github repository here. This is an R markdown (.Rmd) file so you can use R markdown syntax. See the 'Useful links' page in the mooc area (chapter 1) for instructions.*

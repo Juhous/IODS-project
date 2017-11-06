@@ -1,0 +1,1 @@
+This repository serves as a platform for storing and submitting exercises, and the associated R-code, for the University of Helsinki course Introduction to Open Data Science. 
