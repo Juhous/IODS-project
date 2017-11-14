@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "\n\n# Massive faceted bar plot showing how values are distributed in variables\ndf %>% gather(key = \"var\", value = \"value\", -c(Points, Age, Attitude, row_id, gender)) %>%\n  ggplot() +\n  geom_bar(aes(x=as.factor(value), fill = gender)) +\n  facet_wrap(~var)\n\n# Histgrams of non-likert variables\ndf %>% gather(key = \"var\", value = \"value\", c(Points, Age, Attitude)) %>%\n  ggplot() +\n  geom_density(aes(x=value, fill = gender, alpha = .2)) +\n  facet_wrap(~var, scales = \"free\")\n\nggscatmat(as.data.frame(analysis), columns = 2:7, color = \"gender\", alpha = .5)\n\nmodel <- lm(Points ~ Attitude, data = analysis)\nmodel2 <- lm(Points ~ Attitude + Age, data = analysis)\nsummary(model)\ngg <- model.matrix(model)[,2]\ngg\n\n\na <- (analysis$Attitude-mean(analysis$Attitude))^2/sum((analysis$Attitude-mean(analysis$Attitude))^2)+1/nrow(analysis)\nb <- hatvalues(model)\na-b\n\na <- scale(model$residuals)\nb <- rstandard(model)\nc <- rstudent(model)\nd <- model$residuals/sqrt(mean(model$residuals^2))\ne <- model$residuals/(sd(model$residuals)*sqrt(1-hat(model.matrix(model))))\nf <- model$residuals/sd(model$residuals)\ng <- \nb-a\nb-c\nb-d\nb-e\nhead(cbind(a,b,c,d,e, f,g))\n\n\n\na <- plot(model, which = c(1,2), add.smooth = T)\n\n\n# model vs resid \n\n\nattitude <- analysis$Attitude\nfitted <- fitted(model)\nresiduals <- residuals(model)\nnorm.res <- model$residuals/(sqrt(deviance(model)/df.residual(model))*sqrt(1-hatvalues(model)))\nleverage <- as.numeric((attitude-mean(attitude))^2/sum((attitude-mean(attitude))^2)+1/length(attitude))\ncooks <- cooks.distance(model)\nd <- data.frame(id = 1:166, attitude, fitted, residuals, norm.res, leverage, cooks)\nd\n\np1 <- plot_ly(d, x = ~fitted, y = ~residuals, type = 'scatter', mode = 'markers',\n             text = ~paste('Id: ', id), hoverinfo = \"text\")\n\np2 <- plot_ly(d, x = ~leverage, y = ~norm.res, type = 'scatter', mode = 'markers',\n              text = ~paste('Id: ', id), hoverinfo = \"text\")\n\nsubplot(p1,p2)\np3 <-\nggplotly(p3, tooltip = \"text\")\n\n\nb <- ggplot(analysis, aes(leverage, norm.res)) + \n  geom_point() +\n  xlab(\"Leverage\") + ylab (\"Standardized residuals\")\nb\nggplotly(b, hoverinfo == \"name\")\n\nc <- plot(cooks.distance(model), norm.res, xlab = \"Cook's distance\", ylab = \"Standardized residuals\")\nc\n\n\nggplot(canada.cities, aes(long, lat)) +\n  borders(regions = \"canada\") +\n  coord_equal() +\n  geom_point(aes(text = name, size = pop), colour = \"red\", alpha = 1/2)\n\nlibrary(plotly)\n\nxdat <- c(\"Bob Dylan\", \"The Beatles\", \"David Bowie\", \"Randy Newman\", \"The Rolling Stones\", \"Madonna\", \"Frank Sinatra\", \"The Beach Boys\", \"Marvin Gaye\", \"Prince\", \"The Kinks\", \"Elvis Presley\", \"Tom Waits\", \"U2\", \"The Clash\", \"Johnny Cash\", \"Kate Bush\", \"The Supremes\", \"The Smiths\", \"Al Green\", \"Pulp\", \"Chuck Berry\", \"Elvis Costello and the Attractions\", \"Neil Young\", \"Stevie Wonder\", \"Ray Charles\", \"The Pogues\", \"Grace Jones\", \"Bill Withers\", \"The Who\", \"Paul Simon\", \"Roy Orbison\", \"Arctic Monkeys\", \"Bruce Springsteen\", \"The Police\", \"Rod Stewart\", \"Steve Earle\")\n\nydat <- c(24, 19, 9, 8, 8, 6, 6, 6, 6, 6, 6, 6, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4)\n\np <- plot_ly(x = xdat,  y =ydat,  name = \"Number\",\n             marker = list(color = \"#2ca02c\"),\n             type = \"bar\", filename=\"hover_example\")\np\n",
+    "created" : 1510222862115.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2416368202",
+    "id" : "78BB70C2",
+    "lastKnownWriteTime" : 1510693923,
+    "last_content_update" : 1510693923953,
+    "path" : "~/Desktop/IODS/IODS-project/scrapbook.R",
+    "project_path" : "scrapbook.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

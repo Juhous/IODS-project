@@ -1,0 +1,4 @@
+"0","plot("
+"0","  (analysis$Points-mean(analysis$Points))^2/sum((analysis$Points-mean(analysis$Points))^2)+1/nrow(analysis),"
+"0","     scale(resid(model)), "
+"0","     xlab = ""Leverage"", ylab = ""Standardized residuals"")"

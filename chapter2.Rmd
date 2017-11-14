@@ -1,7 +1,91 @@
-# Insert chapter 2 title here
+# Linear regression exercise
 
-*Describe the work you have done this week and summarize your learning.*
+## Load the data
 
-- Describe your work and results clearly. 
-- Assume the reader has an introductory course level understanding of writing and reading R code as well as statistical methods
-- Assume the reader has no previous knowledge of your data or the more advanced methods you are using  
+```{r, message = F}
+library(ggplot2)
+library(GGally)
+library(tidyr)
+library(dplyr)
+library(stringr)
+        
+analysis <- read.csv("data/learning2014.csv") %>% tbl_df()
+glimpse(analysis)
+```
+
+The data contains learning results (points) of 166 students and the possibly associated variables: attitude, age, gender. Also icluded are students' likert-scores on following dimensions of learning : deep, surface/superficial and strategic. 
+
+## Complete description of study variables
+Variables starting with ST, SU, and Dnum present dimensions strategic, superficial, and deep respectively.
+
+```{R}
+library(knitr)
+library(kableExtra)
+info <- read.delim("http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-meta.txt", 
+           header = F, sep = "\t", encoding = "latin1")[12:71,] %>% 
+  str_split(boundary(type = "word"), n = 2, simplify = T) %>% as.data.frame()
+names(info) <- c("Variable", "Description") 
+kable(info, "html") %>% 
+  kable_styling(bootstrap_options = c("hover", "condensed")) %>%
+  scroll_box(height = "250px")
+```
+
+## Exploratory analysis of study variables
+```{R, message = F, out.width = "100%"}
+ggpairs(analysis,       
+  upper = list(continuous = wrap("cor", size = 3)), 
+  lower = list(continuous = wrap("points", alpha = .2, size = .6),
+               combo = wrap("facethist", bins = 10))) +
+  theme(
+    axis.text.x = element_text(angle = 90, color = "black", size = 7, vjust = .5),
+    axis.text.y = element_text(color = "black", size = 7))
+
+summary(analysis)
+```
+
+All variables seem to be normally distributed. There is quite a bit more female subjects than males  (`r sum(analysis$gender=="F")` vs `r sum(analysis$gender=="M")`). By eyeballing histograms above, there seems to be no great differences between genders, except maybe for the attitude-variable. Points, our dependent variable, has a bit of a notch on the left tail, but still reasonably follows normality. For variable age, logarithmic conversion could be considered to increase normality.
+
+## Generating linear model for predicting points
+### Model #1
+I chose to use attitude, deep and stra as explanatory variables for points, as they were most strongly correlated with it according to the exploratory analysis. 
+
+```{R, out.width = "100%"}
+model <- lm(Points ~ Attitude + deep + stra, data = analysis)
+summary(model)
+```
+
+In this model only attitude significantly predicts points, so other 2 variables are excluded. Low p-value for deep-learning probably arises from the fact that Attitude and deep learning are highly correlated (r=0.8)
+
+### Model #2
+```{R, out.width = "100%"}
+model <- lm(Points ~ Attitude, data = analysis)
+summary(model)
+```
+
+So the attitude of the student seems to predict (correlate) how much points (s)he will score in the test; better attitude predicts better scores. R-squared value explains how big proportion of variance of the dependent variable (points) is explained by the model. In this case only 18.5% of the variability in points is explained by the proposed model.
+
+#### Diagnostic plots
+
+```{r, out.width="100%"}
+par(mfrow = c(2,2), oma = c(0, 0, 2, 0), mar = c(2.5,3,2,0.5), mgp = c(1.5,.5,0))
+plot(model, which = c(1,2), add.smooth = T)
+
+norm.res <- model$residuals/(sqrt(deviance(model)/df.residual(model))*sqrt(1-hatvalues(model)))
+# Counted the normalized residuals long way for fun. Following code can be used to check results
+# sum(norm.res != rstandard(model))
+
+aa <- analysis$Attitude
+leverage <- (aa-mean(aa))^2/sum((aa-mean(aa))^2)+1/length(aa)
+
+plot(leverage, norm.res, xlab = "Leverage", ylab = "Standardized residuals")
+plot(cooks.distance(model), norm.res, xlab = "Cook's distance", ylab = "Standardized residuals")
+
+
+```
+<br><br>
+According to diagnostic plots, this model is valid:  
+1. Residuals are the difference between fitted and the actual value. In this plot we see no clustering, or any other patterns, that could indicate problems in the model. **Variance of errors is constant**  
+2. On Q-Q plot, on the extreme values, the model loses some of its accuracy. In other words, the model overestimates performance of students with either very positive or negative attitude. Shapiro-Wilkes test doesn't agree with normality, however: "shapiro.test(rstandard(model))\$p.value)" which gives p = `r shapiro.test(rstandard(model))$p.value`. **Erros in this model are distributed normally *enough.* **  
+3. Leverage describes the unusualness of predictor values. For any individual variable, it tells how extreme, eg. how far of variable mean any particular observation is. For multivariate model, these "hatvalues" take into consideration "combined unusualness" across variables -- observation might not be far from mean in any single variable, but combination of those values might be. **In this model, no observations have high leverage.**  
+4. Cook's distance tells how much fitted values would change if the observation in question is deleted -- it can be used to diagnose and remove influential outliers. **No single observation affects model too much.**  
+<br>
