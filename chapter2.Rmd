@@ -8,7 +8,8 @@ library(GGally)
 library(tidyr)
 library(dplyr)
 library(stringr)
-        
+```
+```{r}
 analysis <- read.csv("data/learning2014.csv") %>% tbl_df()
 glimpse(analysis)
 ```
@@ -27,7 +28,7 @@ info <- read.delim("http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-meta.txt"
 names(info) <- c("Variable", "Description") 
 kable(info, "html") %>% 
   kable_styling(bootstrap_options = c("hover", "condensed")) %>%
-  scroll_box(height = "250px")
+  scroll_box(height = "200px")
 ```
 
 ## Exploratory analysis of study variables
@@ -43,7 +44,7 @@ ggpairs(analysis,
 summary(analysis)
 ```
 
-All variables seem to be normally distributed. There is quite a bit more female subjects than males  (`r sum(analysis$gender=="F")` vs `r sum(analysis$gender=="M")`). By eyeballing histograms above, there seems to be no great differences between genders, except maybe for the attitude-variable. Points, our dependent variable, has a bit of a notch on the left tail, but still reasonably follows normality. For variable age, logarithmic conversion could be considered to increase normality.
+All variables seem to be normally distributed. There is quite a bit more female subjects than males  (`r sum(analysis$gender=="F")` vs `r sum(analysis$gender=="M")`). By eyeballing histograms above, there seems to be no great differences between genders, except maybe for the attitude-variable. Points, our dependent variable, has a bit of a notch on the left tail, but still reasonably follows normality. For variable age, logarithmic conversion might help to increase normality. 
 
 ## Generating linear model for predicting points
 ### Model #1
@@ -62,7 +63,7 @@ model <- lm(Points ~ Attitude, data = analysis)
 summary(model)
 ```
 
-So the attitude of the student seems to predict (correlate) how much points (s)he will score in the test; better attitude predicts better scores. R-squared value explains how big proportion of variance of the dependent variable (points) is explained by the model. In this case only 18.5% of the variability in points is explained by the proposed model.
+So the attitude of the student seems to correlate with how much points (s)he will score in the test; better attitude predicts better scores. R-squared value explains how big proportion of variance of the dependent variable (points) is explained by the model. In this case only 18.5% of the variability in points is explained by the proposed model.
 
 #### Diagnostic plots
 
@@ -82,8 +83,9 @@ plot(cooks.distance(model), norm.res, xlab = "Cook's distance", ylab = "Standard
 
 
 ```
-<br><br>
-According to diagnostic plots, this model is valid:  
+
+#### Conclusions
+According to diagnostic plots, this model has no critical errors:  
 1. Residuals are the difference between fitted and the actual value. In this plot we see no clustering, or any other patterns, that could indicate problems in the model. **Variance of errors is constant**  
 2. On Q-Q plot, on the extreme values, the model loses some of its accuracy. In other words, the model overestimates performance of students with either very positive or negative attitude. Shapiro-Wilkes test doesn't agree with normality, however: "shapiro.test(rstandard(model))\$p.value)" which gives p = `r shapiro.test(rstandard(model))$p.value`. **Erros in this model are distributed normally *enough.* **  
 3. Leverage describes the unusualness of predictor values. For any individual variable, it tells how extreme, eg. how far of variable mean any particular observation is. For multivariate model, these "hatvalues" take into consideration "combined unusualness" across variables -- observation might not be far from mean in any single variable, but combination of those values might be. **In this model, no observations have high leverage.**  
