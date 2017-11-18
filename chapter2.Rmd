@@ -1,15 +1,17 @@
 # Linear regression exercise
 
+## Data wrangling
+Script for data wrangling is [here](https://github.com/Juhous/IODS-project/blob/master/create_learning2014.R)
+
 ## Load the data
 
-```{r, message = F}
+```{r}
 library(ggplot2)
 library(GGally)
 library(tidyr)
-library(dplyr)
+library(dplyr, warn.conflicts = F)
 library(stringr)
-```
-```{r}
+
 analysis <- read.csv("data/learning2014.csv") %>% tbl_df()
 glimpse(analysis)
 ```
@@ -65,7 +67,7 @@ summary(model)
 
 So the attitude of the student seems to correlate with how much points (s)he will score in the test; better attitude predicts better scores. R-squared value explains how big proportion of variance of the dependent variable (points) is explained by the model. In this case only 18.5% of the variability in points is explained by the proposed model.
 
-#### Diagnostic plots
+### Diagnostic plots
 
 ```{r, out.width="100%"}
 par(mfrow = c(2,2), oma = c(0, 0, 2, 0), mar = c(2.5,3,2,0.5), mgp = c(1.5,.5,0))
@@ -84,7 +86,7 @@ plot(cooks.distance(model), norm.res, xlab = "Cook's distance", ylab = "Standard
 
 ```
 
-#### Conclusions
+### Conclusions
 According to diagnostic plots, this model has no critical errors:  
 1. Residuals are the difference between fitted and the actual value. In this plot we see no clustering, or any other patterns, that could indicate problems in the model. **Variance of errors is constant**  
 2. On Q-Q plot, on the extreme values, the model loses some of its accuracy. In other words, the model overestimates performance of students with either very positive or negative attitude. Shapiro-Wilkes test doesn't agree with normality, however: "shapiro.test(rstandard(model))\$p.value)" which gives p = `r shapiro.test(rstandard(model))$p.value`. **Erros in this model are distributed normally *enough.* **  

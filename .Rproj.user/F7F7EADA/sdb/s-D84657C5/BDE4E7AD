@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "h1 {\n   text-transform: uppercase;\n}\n\nhr {\n    display: block;\n    border-top: 5px solid #222;\n}\n\n.btn-block {\n padding: 3px 3px; \n margin-top: 1px;\n background-color: #ecf0f1\n}",
+    "created" : 1511029071628.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3588589844",
+    "id" : "BDE4E7AD",
+    "lastKnownWriteTime" : 1511030553,
+    "last_content_update" : 1511030553296,
+    "path" : "~/Desktop/IODS/IODS-project/styles.css",
+    "project_path" : "styles.css",
+    "properties" : {
+    },
+    "relative_order" : 9,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "css"
+}

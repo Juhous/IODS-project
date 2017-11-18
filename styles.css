@@ -1,0 +1,14 @@
+h1 {
+   text-transform: uppercase;
+}
+
+hr {
+    display: block;
+    border-top: 5px solid #222;
+}
+
+.btn-block {
+ padding: 3px 3px; 
+ margin-top: 1px;
+ background-color: #ecf0f1
+}
