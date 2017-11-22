@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "# Logistic regression exercise\n\n## Data wrangling\nThe code used for data wrangling exercise can be found [here](https://github.com/Juhous/IODS-project/blob/master/create_alc.R)\n\n## Load data\n\n```{r}\nlibrary(ggplot2)\nlibrary(GGally)\nlibrary(tidyr)\nlibrary(dplyr, warn.conflicts = F)\nlibrary(stringr)\nsource(paste(getwd(),\"multiplot.R\", sep=\"/\"))\n\ndf <- read.table(\"http://s3.amazonaws.com/assets.datacamp.com/production/course_2218/datasets/alc.txt\", sep=\",\", head = T) %>% tbl_df()\n\ndf\nsummary(df)\n```\nSo, the data explores school performance of portuguese students. This set contains information of 382 students, their grades and several variables that might correlate with performance.\n\n## Hypothesis of high alcohol use predicting variables\nI thought that good family relations and extra-curricular activities would protect from high alcohol usage. Age and number of absences would, conversely, increase alcohol usage. \n\n```{r}\nmod <- df %>% select(high_use, famrel, activities, absences, age) \nmod\n\nmod %>% select(famrel:age) %>% sapply(., function(variable_value) table(mod$high_use, variable_value))\n\np1 <-  ggplot(mod, aes(high_use, famrel)) + geom_boxplot() \np2 <-  ggplot(mod, aes(high_use, fill = activities)) + geom_bar()\np3 <-  ggplot(mod, aes(high_use, absences)) + geom_boxplot() \np4 <-  ggplot(mod, aes(high_use, age)) + geom_boxplot() \n\nmultiplot(p1,p2,p3,p4, cols = 2)\n\n```\nThese values are well in line with the proposed hypothesis, except for the activities. It seems that extra-curricular activities do not protect from high alcohol usage. \n\n## Logistic regression \n### Model\n```{r}\nm <- glm(high_use ~ famrel + activities + absences + age, data = df, family = binomial)\nsummary(m)\n\n```\n\nBased on the logistic regression model shown above, this hypothesis seems to hold true for factors other than activities. \n\n### Details of model\n```{r}\ncoef(m)\nOR <- coef(m) %>% exp()\nCI <- confint(m) %>% exp() \ncbind(OR, CI)\n```\n\n\n## Predictions\n```{r}\ndf <- mutate(df, prob = predict(m, type = \"response\"))\ndf <- mutate(df, pred= prob > .5)\ndf\ntable(high_use = df$high_use, prediction = df$pred)\ntable(high_use = df$high_use, prediction = df$pred) %>%\n  prop.table() %>% `*`(100) %>% round(2) %>% addmargins()\n```\n\n\n## 10-fold CV\n```{r}\nlibrary(boot)\nloss_func <- function(class, prob) {\n  n_wrong <- abs(class - prob) > 0.5\n  mean(n_wrong)\n}\nloss_func(df$high_use, df$prob)\ncv <- cv.glm(data = df, cost = loss_func, glmfit = m, K = 10)\ncv$delta[1]\n```\nSo with 10-fold cross-validation, accurasy actually increases from ~28% to ~29%\n",
+    "created" : 1511386989948.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2306808651",
+    "id" : "D06AA540",
+    "lastKnownWriteTime" : 1511387187,
+    "last_content_update" : 1511387187099,
+    "path" : "~/Desktop/IODS/IODS-project/chapter3.Rmd",
+    "project_path" : "chapter3.Rmd",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}
