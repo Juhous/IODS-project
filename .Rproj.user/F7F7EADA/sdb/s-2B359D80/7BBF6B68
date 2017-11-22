@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "---\ntitle: \"IODS course project\"\noutput:\n  html_document:\n    theme: flatly\n    toc: true\n    toc_depth: 2\n    fig_caption: true\n    fig_width: 6\n    fig_height: 4\n    code_folding: none\nauthor: \"Juho Pirhonen\"\ncss: styles.css\n---\n<script src=showCodePanel.js type=\"text/javascript\" character=\"UTF-8\"></script>\n\n***\n  \n```{r child = \"chapter1.Rmd\"}\n```\n  \n***\n  \n```{r child = \"chapter2.Rmd\"}\n```\n\n***\n\n```{r child = \"chapter3.Rmd\"}\n```\n\n\n",
+    "created" : 1511179924306.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1796294307",
+    "id" : "7BBF6B68",
+    "lastKnownWriteTime" : 1511382318,
+    "last_content_update" : 1511382318,
+    "path" : "~/Desktop/IODS/IODS-project/index.Rmd",
+    "project_path" : "index.Rmd",
+    "properties" : {
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

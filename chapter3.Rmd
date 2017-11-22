@@ -1,0 +1,4 @@
+# Logistic regression exercise
+
+## Data wrangling
+The code used for data wrangling exercise can be found [here]()

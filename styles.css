@@ -2,6 +2,29 @@ h1 {
    text-transform: uppercase;
 }
 
+.panel {
+    margin-bottom: 0;
+}
+
+.panel-heading{
+  padding: 2px 7px 2px 7px;
+  font-size: 7pt;
+}
+
+pre {
+    display: block;
+    padding: 10px;
+    margin: 0 0 0;
+    font-size: 14px;
+    line-height: 1.42857143;
+    word-break: break-all;
+    word-wrap: break-word;
+    color: #7b8a8b;
+    background-color: #fff;
+    border: 1px solid #cccccc;
+    border-radius: 4px
+}
+
 hr {
     display: block;
     border-top: 5px solid #222;

@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "h1 {\n   text-transform: uppercase;\n}\n\n.panel {\n    margin-bottom: 0;\n}\n\n.panel-heading{\n  padding: 2px 7px 2px 7px;\n  font-size: 7pt;\n}\n\npre {\n    display: block;\n    padding: 10px;\n    margin: 0 0 0;\n    font-size: 14px;\n    line-height: 1.42857143;\n    word-break: break-all;\n    word-wrap: break-word;\n    color: #7b8a8b;\n    background-color: #fff;\n    border: 1px solid #cccccc;\n    border-radius: 4px\n}\n\nhr {\n    display: block;\n    border-top: 5px solid #222;\n}\n\n.btn-block {\n padding: 3px 3px; \n margin-top: 1px;\n background-color: #ecf0f1\n}",
+    "created" : 1511179469649.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3460719684",
+    "id" : "24A1A951",
+    "lastKnownWriteTime" : 1511382318,
+    "last_content_update" : 1511382318,
+    "path" : "~/Desktop/IODS/IODS-project/styles.css",
+    "project_path" : "styles.css",
+    "properties" : {
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "css"
+}

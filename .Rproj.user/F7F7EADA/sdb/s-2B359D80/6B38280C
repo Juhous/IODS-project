@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "# Juho Pirhonen 2017-11-20\n# Data is from: https://archive.ics.uci.edu/ml/machine-learning-databases/00320/student.zip\nlibrary(dplyr, warn.conflicts = F)\nlibrary(tidyr)\nlibrary(purrr)\n\nmat <- read.csv(\"data/student-mat.csv\", sep = \";\")\npor <- read.csv(\"data/student-por.csv\", sep = \";\")\n\nglimpse(mat)\nglimpse(por)\n\njoined <- c(\"school\", \"sex\", \"age\", \n          \"address\", \"famsize\", \"Pstatus\", \n          \"Medu\", \"Fedu\", \"Mjob\", \"Fjob\", \n          \"reason\", \"nursery\",\"internet\")\n\nmatPor <- inner_join(mat, por, by = joined) \nglimpse(matPor)\n\nsapply(list(mat,por,df), dim)\n\n\n\nunjoined <- select(por, -one_of(joined)) %>% names()\nunjoined\nis_num <- select(por, unjoined) %>% sapply(is.numeric)\nis_num\n\ndf <- matPor %>% select(joined)\nfor(col in unjoined) {\n  if(is_num[col]==T) {\n    df[col] <- matPor %>%\n      select(starts_with(col)) %>%\n      rowMeans()\n  }\n  else{\n    df[col] <- select(matPor, starts_with(col))[1] \n  }\n}\n\nglimpse(df)\nrm(matPor, joined, unjoined, col, is_num, mat, por)\n\ndf <- mutate(df, alc_use = (Dalc+Walc)/2)\ndf <- mutate(df, high_use = alc_use > 2)\nglimpse(df)\n\nwrite.csv(df, file = \"data/alc\")\n",
+    "created" : 1511382047327.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1608135586",
+    "id" : "6B38280C",
+    "lastKnownWriteTime" : 1511196439,
+    "last_content_update" : 1511196439,
+    "path" : "~/Desktop/IODS/IODS-project/create_alc.R",
+    "project_path" : "create_alc.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

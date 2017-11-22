@@ -12,6 +12,7 @@ output:
 author: "Juho Pirhonen"
 css: styles.css
 ---
+<script src=showCodePanel.js type="text/javascript" character="UTF-8"></script>
 
 ***
   
