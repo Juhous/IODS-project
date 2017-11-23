@@ -4,7 +4,6 @@
 The code used for data wrangling exercise can be found [here](https://github.com/Juhous/IODS-project/blob/master/create_alc.R)
 
 ## Load data
-
 ```{r}
 library(ggplot2)
 library(GGally)
@@ -21,63 +20,69 @@ summary(df)
 So, the data explores school performance of portuguese students. This set contains information of 382 students, their grades and several variables that might correlate with performance.
 
 ## Hypothesis of high alcohol use predicting variables
-I thought that good family relations and extra-curricular activities would protect from high alcohol usage. Age and number of absences would, conversely, increase alcohol usage. 
+I thought that good family relations and extra-curricular activities would protect from high alcohol usage. Number of absences and going more out with friends would, conversely, increase alcohol usage. 
 
 ```{r}
-mod <- df %>% select(high_use, famrel, activities, absences, age) 
+mod <- df %>% select(high_use, famrel, activities, absences, goout) 
 mod
 
-mod %>% select(famrel:age) %>% sapply(., function(variable_value) table(mod$high_use, variable_value))
+mod %>% select(famrel:goout) %>% sapply(., function(variable_value) table(mod$high_use, variable_value))
 
 p1 <-  ggplot(mod, aes(high_use, famrel)) + geom_boxplot() 
 p2 <-  ggplot(mod, aes(high_use, fill = activities)) + geom_bar()
 p3 <-  ggplot(mod, aes(high_use, absences)) + geom_boxplot() 
-p4 <-  ggplot(mod, aes(high_use, age)) + geom_boxplot() 
+p4 <-  ggplot(mod, aes(high_use, goout)) + geom_boxplot() 
 
 multiplot(p1,p2,p3,p4, cols = 2)
-
+rm(p1,p2,p3,p4, mod)
 ```
-These values are well in line with the proposed hypothesis, except for the activities. It seems that extra-curricular activities do not protect from high alcohol usage. 
+
+These values are well in line with the proposed hypothesis, except for the activities; it seems that extra-curricular activities do not protect from high alcohol usage. 
 
 ## Logistic regression 
 ### Model
 ```{r}
-m <- glm(high_use ~ famrel + activities + absences + age, data = df, family = binomial)
+m <- glm(high_use ~ famrel + activities + absences + goout, data = df, family = binomial)
 summary(m)
-
 ```
-
-Based on the logistic regression model shown above, this hypothesis seems to hold true for factors other than activities. 
+Based on the logistic regression model shown above, this hypothesis seems to hold true for all proposed factors
 
 ### Details of model
 ```{r}
 coef(m)
 OR <- coef(m) %>% exp()
 CI <- confint(m) %>% exp() 
-cbind(OR, CI)
+cbind(OR, CI) %>% round(3)
+rm(OR,CI)
 ```
+A step towards better family relationship is associated with odds .731, meaning that a risk for high alcohol usage is reduced. Growing number of absences, going out, and a lack of extra-curricular activities tend to lead to more high alcohol usage. 
 
-
-## Predictions
+### Predictions
 ```{r}
 df <- mutate(df, prob = predict(m, type = "response"))
-df <- mutate(df, pred= prob > .5)
-df
+
+library(pROC, warn.conflicts = F)
+plot.roc(df$high_use, df$prob)
+df <- mutate(df, pred = prob > .4)
+
 table(high_use = df$high_use, prediction = df$pred)
 table(high_use = df$high_use, prediction = df$pred) %>%
   prop.table() %>% `*`(100) %>% round(2) %>% addmargins()
 ```
-
+Based on receiver-operating-curve, the threshold for classification should be a little over .3 for optimal accurasy. With a threshold of .4, roughly 77% of predictions are correct. This better than what you should expect from simple toin cossing scenario, so there is some benefit in using our model. 
 
 ## 10-fold CV
 ```{r}
 library(boot)
 loss_func <- function(class, prob) {
-  n_wrong <- abs(class - prob) > 0.5
+  # adjusted for threshold .4
+  n_wrong <- abs(class - prob - .1) > .5
   mean(n_wrong)
 }
 loss_func(df$high_use, df$prob)
 cv <- cv.glm(data = df, cost = loss_func, glmfit = m, K = 10)
 cv$delta[1]
+rm(cv, loss_func)
 ```
-So with 10-fold cross-validation, accurasy actually increases from ~28% to ~29%
+So with 10-fold cross-validation, accurasy decreaes from ~77% to ~75%
+  
