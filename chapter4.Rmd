@@ -4,7 +4,6 @@
 ```{r, message = FALSE}
 #Hidden
 source("helper_functions.R")
-knitr::opts_chunk$set(out.width = "100%")
 library(magrittr)
 library(GGally)
 library(ggplot2)
@@ -33,7 +32,7 @@ rm(Boston)
 ## 3 Exploring data
 ### Start
 
-```{R}
+```{R, out.width = "100%"}
 #Hidden
 summaryKable(df) %>% 
   kable("html", align = "rrr", caption = "Data variable summary") %>%
@@ -41,7 +40,7 @@ summaryKable(df) %>%
   scroll_box(width = "100%")
 ```
 
-```{R}
+```{R, out.width = "100%"}
 #Hidden
 ggpairs(df,
   title = "Study variable overview",
@@ -70,7 +69,7 @@ df$crim <- ntile(df$crim, 4) %>%
 table(df$crim)
 ```
 
-```{r}
+```{r, out.width = "100%"}
 #Hidden
 summaryKable(df) %>% 
   kable("html", align = "rrr", caption = "Data variable summary") %>%
@@ -78,7 +77,7 @@ summaryKable(df) %>%
   scroll_box(width = "100%")
 ```
 
-```{r}
+```{r, out.width = "100%"}
 #Hidden
 ggpairs(df,
   title = "Study variable overview",
@@ -112,7 +111,7 @@ lda.fit
 ```
 
 I made it 3D for fun 
-```{r}
+```{r, out.width = "100%"}
 #Hidden
 # plot the lda results
 points <- data.frame(crim = train$crim,
@@ -170,17 +169,15 @@ Based on this, optimal value around 3 centers.
 ```{R}
 km <- kmeans(df, centers = 3)
 ```
-```{r}
+```{r , out.width = "100%"}
 #Hidden
-df %>% mutate(clust = factor(km$cluster)) %>%
+p1 <- df %>% mutate(clust = factor(km$cluster)) %>%
   gather(., key = "var", value = "value", -c(crim, clust)) %>%
   ggplot(aes(value, crim, color = clust)) + 
   geom_point(shape = 1, size = 1.5, stroke = 1, alpha = .3) + 
   facet_wrap(~var, scales = "free_x")
-```
-```{R}
-#Hidden
-cor(df) %>% corrplot(method = "pie", type = "upper")
+p2 <- cor(df) %>% corrplot(method = "pie", type = "upper")
+multiplot(p1, p2, cols = 2)
 ```
 Tax, 
 
@@ -233,7 +230,7 @@ matrix_product <- as.matrix(model_predictors) %*% lda.fit$scaling
 matrix_product <- as.data.frame(matrix_product) 
 head(matrix_product)
 ```
-```{r}
+```{r, out.width = "100%"}
 #Hidden
 p1 <- plot_ly(data = matrix_product, x = ~LD1, y = ~LD2, z = ~LD3, 
         type= 'scatter3d', mode='markers', color = train$crim, 

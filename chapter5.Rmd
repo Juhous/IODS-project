@@ -6,7 +6,6 @@ Code for data wrangling can be found [here](https://github.com/Juhous/IODS-proje
 ```{r, message = FALSE}
 #Hidden
 source("helper_functions.R")
-knitr::opts_chunk$set(out.width = "100%")
 library(magrittr)
 library(GGally)
 library(stringr)
@@ -24,14 +23,14 @@ glimpse(df)
 Dataset contains information of human development charasteritics. It totals 189 observations (countries) and 8 variables. 
 
 ### 2. Graphical overview of data
-```{r}
+```{r, out.width = "100%"}
 #Hidden
 df %>% summaryKable() %>% 
   kable("html", align = "rrr", caption = "Data variable summary") %>%
   kable_styling(bootstrap_options = c("hover", "condensed")) %>% 
   scroll_box(width = "100%")
 ```
-```{R, warning = F}
+```{R, warning = F, out.width = "100%"}
 # Hidden
 ggpairs(df,
   title = "Study variable overview",
