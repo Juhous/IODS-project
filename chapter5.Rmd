@@ -57,6 +57,7 @@ cor(df, use = "pairwise.complete.obs") %>%
                      mar=c(0,0,1,0),
                      diag = F) 
 ```
+
 According to above plot, education correlates strongly and positively with life expectancy, and negatively with maternal mortality and adolescent births. Maternal mortality correlates strongly and negatively with education ratio, life expectancy and education. 
 
 ## Principal component analysis
