@@ -1,4 +1,3 @@
-
 # About the website
 
 This website serves as a course diary for a Uni. Helsinki course Introduction to Open Data Science (IODS)

@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "# About the website\n\nThis website serves as a course diary for a Uni. Helsinki course Introduction to Open Data Science (IODS)\n\n## Code repository\n\nThe _R-code_ used is stored and available for inspection in  [this GitHub repository](https://github.com/Juhous/IODS-project)\n\n",
+    "created" : 1512577680430.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1554794321",
+    "id" : "C0BA6123",
+    "lastKnownWriteTime" : 1512577701,
+    "last_content_update" : 1512577701059,
+    "path" : "~/Desktop/IODS/IODS-project/chapter1.Rmd",
+    "project_path" : "chapter1.Rmd",
+    "properties" : {
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

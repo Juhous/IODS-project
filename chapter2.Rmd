@@ -1,5 +1,3 @@
-<script src=showCodePanel.js type="text/javascript" character="UTF-8"></script>
-
 # Linear regression exercise
 
 ## Data wrangling
