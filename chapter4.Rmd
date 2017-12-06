@@ -214,6 +214,7 @@ ggplot(points) +
                                label = label), 
             show.legend = F) 
 ```
+
 The strongest predictors of clusters are tax, nox, zn, and age. 
 
 ## Superbonus
