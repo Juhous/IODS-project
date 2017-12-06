@@ -163,21 +163,20 @@ km <- kmeans(df, centers = 3)
 twcss <- sapply(1:20, function(k) kmeans(df, k)$tot.withinss)
 qplot(x = 1:20, y = twcss, geom = 'line')
 ```
+
 Based on this, optimal value around 3 centers.
 
 ### Km with optimal number of clusters
 ```{R}
 km <- kmeans(df, centers = 3)
 ```
-```{r , out.width = "100%"}
+```{r, out.width = "100%"}
 #Hidden
-p1 <- df %>% mutate(clust = factor(km$cluster)) %>%
+df %>% mutate(clust = factor(km$cluster)) %>%
   gather(., key = "var", value = "value", -c(crim, clust)) %>%
   ggplot(aes(value, crim, color = clust)) + 
   geom_point(shape = 1, size = 1.5, stroke = 1, alpha = .3) + 
-  facet_wrap(~var, scales = "free_x")
-p2 <- cor(df) %>% corrplot(method = "pie", type = "upper")
-multiplot(p1, p2, cols = 2)
+  facet_wrap(~var, scales = "free_x") 
 ```
 Tax, 
 

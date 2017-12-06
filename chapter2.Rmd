@@ -84,6 +84,7 @@ So the attitude of the student seems to correlate with how much points (s)he wil
 ```{r, out.width="100%"}
 par(mfrow = c(2,2), oma = c(0, 0, 2, 0), mar = c(2.5,3,2,0.5), mgp = c(1.5,.5,0))
 plot(model, which = c(1,2), add.smooth = T)
+autoimage::reset.par()
 
 norm.res <- model$residuals/(sqrt(deviance(model)/df.residual(model))*sqrt(1-hatvalues(model)))
 # Counted the normalized residuals long way for fun. Following code can be used to check results
