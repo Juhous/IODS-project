@@ -35,7 +35,8 @@ rm(Boston)
 
 ```{R}
 #Hidden
-summaryKable(df) %>% kable("html", align = "rrr") %>%
+summaryKable(df) %>% 
+  kable("html", align = "rrr", caption = "Data variable summary") %>%
   kable_styling(bootstrap_options = c("hover", "condensed")) %>% 
   scroll_box(width = "100%")
 ```
@@ -43,6 +44,7 @@ summaryKable(df) %>% kable("html", align = "rrr") %>%
 ```{R}
 #Hidden
 ggpairs(df,
+  title = "Study variable overview",
   upper = list(continuous = wrap("cor", size = 2)),
   lower = list(
     continuous = wrap("points", alpha = .2, size = .3),
@@ -70,7 +72,8 @@ table(df$crim)
 
 ```{r}
 #Hidden
-summaryKable(df) %>% kable("html", align = "rrr") %>%
+summaryKable(df) %>% 
+  kable("html", align = "rrr", caption = "Data variable summary") %>%
   kable_styling(bootstrap_options = c("hover", "condensed")) %>% 
   scroll_box(width = "100%")
 ```
@@ -78,6 +81,7 @@ summaryKable(df) %>% kable("html", align = "rrr") %>%
 ```{r}
 #Hidden
 ggpairs(df,
+  title = "Study variable overview",
   upper = list(continuous = wrap("cor", size = 2)),
   lower = list(
     continuous = wrap("points", alpha = .2, size = .3),

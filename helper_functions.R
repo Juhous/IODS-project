@@ -39,9 +39,9 @@ summaryKable <- function(dataFrame) {
   require(stringr)
   vect <- sapply(dataFrame, function(x) {
     if(!is.factor(x)) { 
-      a <- c(quantile(x, probs = c(0,0.25,0.5)), 
-             mean(x),
-             quantile(x, probs = c(0.75,1))) %>% 
+      a <- c(quantile(x, probs = c(0,0.25,0.5), na.rm = T), 
+             mean(x, na.rm = T),
+             quantile(x, probs = c(0.75,1), na.rm = T)) %>% 
         formatC(format = "f", digits = 3) %>% 
         unname() 
     }

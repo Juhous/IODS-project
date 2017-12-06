@@ -4,7 +4,7 @@ output:
   html_document:
     theme: flatly
     toc: true
-    toc_depth: 2
+    toc_depth: 3
     fig_caption: true
     fig_width: 6
     fig_height: 4
@@ -36,7 +36,7 @@ css: styles.css
 
 ***
 
-```{r child = "chapter4.Rmd"}
+```{r child = "chapter5.Rmd"}
 ```
 
 ***

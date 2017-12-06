@@ -34,7 +34,8 @@ info <- read.delim("http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-meta.txt"
            header = F, sep = "\t", encoding = "latin1")[12:71,] %>% 
   str_split(boundary(type = "word"), n = 2, simplify = T) %>% as.data.frame()
 names(info) <- c("Variable", "Description") 
-kable(info, "html") %>% 
+info %>%
+  kable("html", align = "rrr", caption = "Data variable info") %>% 
   kable_styling(bootstrap_options = c("hover", "condensed")) %>%
   scroll_box(height = "200px")
 ```
@@ -42,7 +43,8 @@ kable(info, "html") %>%
 ## Exploratory analysis of study variables
 ```{R, message = F, out.width = "100%"}
 #Hidden
-ggpairs(analysis,       
+ggpairs(analysis,
+  title = "Study variable overview",
   upper = list(continuous = wrap("cor", size = 3)), 
   lower = list(continuous = wrap("points", alpha = .2, size = .6),
                combo = wrap("facethist", bins = 10))) +
@@ -52,7 +54,8 @@ ggpairs(analysis,
 ```
 ```{r}
 #Hidden
-summaryKable(analysis) %>% kable("html", align = "rrr") %>%
+summaryKable(analysis) %>% 
+  kable("html", align = "rrr", caption = "Data variable summary") %>% 
   kable_styling(bootstrap_options = c("hover", "condensed")) %>% 
   scroll_box(width = "100%")
 ```

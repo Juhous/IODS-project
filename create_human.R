@@ -24,7 +24,7 @@ summary(gii)
 
 gii %<>% mutate(eduRatio = edu2F/edu2M, labRatio = labF/labM)
 
-human <- inner_join(gii, hd, by = "country")
+human <- inner_join(hd, gii, by = "country")
 glimpse(human)
 
 human %<>% mutate(GNIC = as.numeric(str_replace(GNIC, ",", ".")))
@@ -32,12 +32,14 @@ human %<>% select(country, eduRatio, labRatio, expEdu, lifeExp,
                   GNIC, matMort, adolBirthRate, reprParl)
 glimpse(human)
 
+human %<>% filter(complete.cases(.)) 
+
 tail(human,10)
-human <- human[1:189,]
+human <- human[1:155,]
 
 rownames(human) <- human$country
 human %<>% select(-country)
 
 glimpse(human)
 
-write.csv(human, file = "data/human.csv", row.names = F)
+write.csv(human, file = "data/human.csv")
