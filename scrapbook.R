@@ -104,7 +104,12 @@ p <- plot_ly(x = xdat,  y =ydat,  name = "Number",
              type = "bar", filename="hover_example")
 p
 
+as.data.frame(colSums(t(pca$rotation) * summary(pca)$importance[2,]), decreasing =T)
+colSums(abs(t(pca$rotation) * summary(pca)$importance[2,]))
+(t(pca$rotation) * summary(pca)$importance[2,]) %>% abs() %>% colSums()
 
+#manual for eduratio
+(abs(pca_scaled$rotation[1,]) * summary(pca_scaled)$importance[2,]) %>% sum
 
 df2 <- data.frame()
 for(i in 1:ncol(df)) {

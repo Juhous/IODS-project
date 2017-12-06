@@ -68,21 +68,40 @@ pca %>% summary()
 ```
 ```{r, warning=F}
 #Hidden
-biplot(pca, choices = 1:2)
+biplot(pca, choices = 1:2, cex = c(.5,1))
 ```
+
+Based on this plot, it seems tahat GNI per capita and maternal mortality are the most essential explanatory components of this data set. 
 
 ### 4. PCA on normalized data
 ```{r}
 df_scaled <- scale(df)
-pca <- prcomp(df_scaled)
-pca %>% summary
+pca_scaled <- prcomp(df_scaled)
+pca_scaled %>% summary
 ```
 ```{r, warning=F}
 #Hidden
-biplot(pca, choices = 1:2)
+biplot(pca_scaled, choices = 1:2, cex = c(.5,1))
 ```
 
+According to scaled data, there is much more variation to what variables explain most of the variance in the data. Here, PC1 explains 50% of variation and most important determinary variables are maternal mortality, life expectancy and so forth. PC2 only explains 16%, and the most significant variables are labour ratio and parliamentary representation. 
+
 ### 5. Interpret differences
+```{r}
+rbind(summary(pca)$importance[2,], summary(pca_scaled)$importance[2,]) %>%
+  as.data.frame(row.names = c("orig", "scaled"))
+```
+
+The total explained variance decreases with the scaled data. Still, only 3 principal components explain 77% of the variance in the data, and with 5 >90% of variance is explained.
+
+```{r}
+orig <- abs(pca$rotation) %*% summary(pca)$importance[2,]
+scaled <- abs(pca_scaled$rotation) %*% summary(pca_scaled)$importance[2,] 
+cbind(orig, scaled) %>% data.frame() %>% 
+  rename(orig = X1, scaled = X2) %>% round(3) %>% t 
+```
+
+We can study the how much of the PCA-variance is explained by a variable as shown above. So, we calculate the importance_of_PC*absolute_value_for_variable, and sum this value across PCs for any given variable. From the results, it becomes clear that maternal mortality and GNI per capita were crudely overrepresented in the non-scaled data, most likely because of their high absolute range. With scaled data, the amount of explained variation is distributed fairly equally within variables.
 
 ## 6. MCA with tea dataset
 ```{r}
@@ -99,4 +118,5 @@ mca %>% summary
 mca %>% plot(invisible=c("ind"))
 ```
 
+Based on the plot, the 2 main components describe ~40% of variation in data. Most influential variable seems to be green.
 
