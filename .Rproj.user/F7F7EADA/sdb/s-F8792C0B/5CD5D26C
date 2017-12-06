@@ -1,14 +1,14 @@
 {
     "collab_server" : "",
-    "contents" : "---\ntitle: \"IODS course project\"\noutput:\n  html_document:\n    theme: flatly\n    toc: true\n    toc_depth: 2\n    fig_caption: true\n    fig_width: 6\n    fig_height: 4\n    code_folding: none\nauthor: \"Juho Pirhonen\"\ncss: styles.css\n---\n<script src=showCodePanel.js type=\"text/javascript\" character=\"UTF-8\"></script>\n\n***\n  \n```{r child = \"chapter1.Rmd\"}\n```\n  \n***\n  \n```{r child = \"chapter2.Rmd\"}\n```\n\n***\n\n```{r child = \"chapter3.Rmd\"}\n```\n\n***\n\n```{r child = \"chapter4.Rmd\"}\n```\n\n***\n\n",
+    "contents" : "---\ntitle: \"IODS course project\"\noutput:\n  html_document:\n    theme: flatly\n    toc: true\n    toc_depth: 2\n    fig_caption: true\n    fig_width: 6\n    fig_height: 4\n    code_folding: none\nauthor: \"Juho Pirhonen\"\ncss: styles.css\n---\n<script src=showCodePanel.js type=\"text/javascript\" character=\"UTF-8\"></script>\n\n***\n  \n```{r child = \"chapter1.Rmd\"}\n```\n  \n***\n  \n```{r child = \"chapter2.Rmd\"}\n```\n\n***\n\n```{r child = \"chapter3.Rmd\"}\n```\n\n***\n\n```{r child = \"chapter4.Rmd\"}\n```\n\n***\n\n```{r child = \"chapter4.Rmd\"}\n```\n\n***\n\n",
     "created" : 1511437176339.000,
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "3018592680",
+    "hash" : "1035112503",
     "id" : "5CD5D26C",
-    "lastKnownWriteTime" : 1512565134,
-    "last_content_update" : 1512565134775,
+    "lastKnownWriteTime" : 1512566953,
+    "last_content_update" : 1512566953464,
     "path" : "~/Desktop/IODS/IODS-project/index.Rmd",
     "project_path" : "index.Rmd",
     "properties" : {

@@ -14,30 +14,5 @@ css: styles.css
 ---
 <script src=showCodePanel.js type="text/javascript" character="UTF-8"></script>
 
-***
-  
-```{r child = "chapter1.Rmd"}
-```
-  
-***
-  
-```{r child = "chapter2.Rmd"}
-```
 
-***
-
-```{r child = "chapter3.Rmd"}
-```
-
-***
-
-```{r child = "chapter4.Rmd"}
-```
-
-***
-
-```{r child = "chapter4.Rmd"}
-```
-
-***
-
+write.csv(human, file = "data/human.csv", row.names = F)

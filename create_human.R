@@ -1,3 +1,7 @@
+# Juho Pirhonen
+# Data originates from http://hdr.undp.org/en/content/human-development-index-hdi
+# Data wrangling for Dimensionality reduction exercise 
+
 library(magrittr)
 library(ggplot2)
 library(stringr)
@@ -11,7 +15,8 @@ gii <- read.csv("http://s3.amazonaws.com/assets.datacamp.com/production/course_2
 
 str(hd)
 str(gii)
-names(hd) <- c("HDIr", "country", "HDI", "lifeExp", "expEdu", "meanEdu", "GNIC", "GNICr-HDIr")
+
+names(hd) <- c("HDIr", "country", "HDI", "lifeExp", "expEdu", "meanEdu", "GNIC", "GNICr_HDIr")
 names(gii) <- c("GIIr", "country", "GII", "matMort", "adolBirthRate", "reprParl", 
                 "edu2F", "edu2M", "labF", "labM")
 summary(hd)
@@ -20,6 +25,19 @@ summary(gii)
 gii %<>% mutate(eduRatio = edu2F/edu2M, labRatio = labF/labM)
 
 human <- inner_join(gii, hd, by = "country")
+glimpse(human)
+
+human %<>% mutate(GNIC = as.numeric(str_replace(GNIC, ",", ".")))
+human %<>% select(country, eduRatio, labRatio, expEdu, lifeExp, 
+                  GNIC, matMort, adolBirthRate, reprParl)
+glimpse(human)
+
+tail(human,10)
+human <- human[1:189,]
+
+rownames(human) <- human$country
+human %<>% select(-country)
+
 glimpse(human)
 
 write.csv(human, file = "data/human.csv", row.names = F)
