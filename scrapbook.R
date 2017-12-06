@@ -1,4 +1,16 @@
-
+library(MASS)
+library(magrittr)
+library(ggplot2)
+library(viridis)
+library(GGally)
+library(data.table)
+library(purrr)
+library(stringr)
+library(tidyr)
+library(dplyr)
+library(plotly)
+library(corrplot)
+source("multiplot.R")
 
 # Massive faceted bar plot showing how values are distributed in variables
 df %>% gather(key = "var", value = "value", -c(Points, Age, Attitude, row_id, gender)) %>%
@@ -91,3 +103,17 @@ p <- plot_ly(x = xdat,  y =ydat,  name = "Number",
              marker = list(color = "#2ca02c"),
              type = "bar", filename="hover_example")
 p
+
+
+
+df2 <- data.frame()
+for(i in 1:ncol(df)) {
+  for(j in i:ncol(df)){
+    a <- data.frame(y = df[[j]], 
+                    x = df[[i]],
+                    clust = factor(km$cluster),
+                    name = paste(names(df[i]),names(df[j]), sep=":"))
+    df2 <- rbind(df2, a)
+  }
+}
+ggplot(df2) + geom_point(aes(x,y, color = clust)) + facet_wrap(~name)

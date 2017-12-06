@@ -1,0 +1,272 @@
+---
+title: "IODS course project"
+output:
+  html_document:
+    theme: flatly
+    toc: true
+    toc_depth: 2
+    fig_caption: true
+    fig_width: 6
+    fig_height: 4
+    code_folding: none
+author: "Juho Pirhonen"
+css: styles.css
+---
+<script src=showCodePanel.js type="text/javascript" character="UTF-8"></script>
+
+# Clustering and classification
+
+## 2 Loading data
+```{r, message = FALSE}
+#Hidden
+source("helper_functions.R")
+knitr::opts_chunk$set(out.width = "100%")
+library(magrittr)
+library(GGally)
+library(ggplot2)
+library(stringr)
+library(tidyr)
+library(MASS)
+library(knitr)
+library(kableExtra)
+library(corrplot)
+library(plotly)
+library(dplyr)
+```
+```{R}
+data("Boston")
+df <- Boston %>% tbl_df() %>% 
+  mutate_at(vars(chas), funs(as.factor))
+glimpse(df)
+```
+```{R, echo = FALSE}
+help(Boston)
+rm(Boston)
+```
+14 variables, for which complete description can be found [here]("https://stat.ethz.ch/R-manual/R-devel/library/MASS/html/Boston.html"). In short, the dataset has information of housing values in different suburbs of Boston. Study includes multiple variables describing safety, housing density, and accessibility, for example.
+
+
+## 3 Exploring data
+### Start
+
+```{R}
+#Hidden
+summaryKable(df) %>% kable("html", align = "rrr") %>%
+  kable_styling(bootstrap_options = c("hover", "condensed")) %>% 
+  scroll_box(width = "100%")
+```
+
+```{R}
+#Hidden
+ggpairs(df,
+  upper = list(continuous = wrap("cor", size = 2)),
+  lower = list(
+    continuous = wrap("points", alpha = .2, size = .3),
+    combo = wrap("facethist", bins = 20))) +
+theme(axis.text.x = element_text(
+                  angle = 90,
+                  color = "black",
+                  size = 6,
+                  vjust = .5),
+      axis.text.y = element_text(color = "black", size = 6))
+```
+The data is quite spread out. 
+
+## 4 Scaling and sampling
+### Scaling
+```{R}
+# Scale function adds attributes, and ggpairs doesn't like it
+df %<>% mutate_at(vars(-chas), funs(scale)) %>%
+  mutate_at(vars(-chas), funs(as.vector)) 
+
+df$crim <- ntile(df$crim, 4) %>% 
+  factor(labels = c("low", "med-lo", "med-hi", "high"))
+table(df$crim)
+```
+
+```{r}
+#Hidden
+summaryKable(df) %>% kable("html", align = "rrr") %>%
+  kable_styling(bootstrap_options = c("hover", "condensed")) %>% 
+  scroll_box(width = "100%")
+```
+
+```{r}
+#Hidden
+ggpairs(df,
+  upper = list(continuous = wrap("cor", size = 2)),
+  lower = list(
+    continuous = wrap("points", alpha = .2, size = .3),
+    combo = wrap("facethist", bins = 20))) +
+theme(axis.text.x = element_text(
+                  angle = 90,
+                  color = "black",
+                  size = 6,
+                  vjust = .5),
+      axis.text.y = element_text(color = "black", size = 6))
+```
+asldkfj
+
+### Sampling to test and train sets
+```{r}
+sample_ind <- sample(nrow(df),  size = nrow(df) * 0.8)
+train <- df[sample_ind,]
+test <-  df[-sample_ind,]
+data.frame(dim(train),dim(test))
+```
+asdf
+
+## 5 Linear discriminant analysis
+### Model and plot
+```{R}
+lda.fit <- lda(crim ~ ., data = train)
+lda.fit
+```
+
+I made it 3D for fun 
+```{r}
+#Hidden
+# plot the lda results
+points <- data.frame(crim = train$crim,
+                     lda = predict(lda.fit)$x)
+levels(points$crim) %<>%  str_to_title()
+
+arrows <- coef(lda.fit) %>% 
+  data.frame(., label = rownames(.)) %>% arrange(desc(abs(LD1))) %>% 
+  mutate(LD1 = LD1*2.5, LD2 = LD2*2.5, LD3 = LD3*2.5, pos = 1) %>% 
+  rbind(., mutate(., LD1=0, LD2=0, LD3=0, pos =0)) 
+
+
+p1 <- plot_ly(arrows, x = ~LD1, y = ~LD2, z = ~LD3, 
+  type = "scatter3d" , color = ~label, colors = rep(rgb(0, 0, 0), 13),
+  opacity = .5, mode = "lines", hoverinfo = "name", showlegend = FALSE, 
+  line = list(width = 5))
+
+p2 <- plot_ly(points, x = ~lda.LD1, y = ~lda.LD2, z = ~lda.LD3, 
+    type = "scatter3d" , color = ~crim, opacity = .5, hoverinfo = "none",
+    mode = "markers", marker = list(size = 3, width = 2)) %>% 
+  layout(title = "PCA",
+       scene = list(xaxis = list(title = "LDA1"),
+                    yaxis = list(title = "LDA2"),
+                    zaxis = list(title = "LDA3")))
+
+subplot(p1, p2)
+```
+
+
+## 6 Testing the model. 
+```{R}
+table("Crime" = test$crim, 
+      "Prediction" = predict(lda.fit, newdata = test)$class)
+```
+Many comments here
+
+## 7 Kmeans
+### Finding optimal number
+```{r}
+data("Boston")
+df <- Boston %>% tbl_df
+df %<>% mutate_at(vars(-chas), funs(scale)) %>% 
+  mutate_at(vars(-chas), funs(as.vector)) 
+  
+cbind(Bost = summary(dist(Boston)), df = summary(dist(df))) %>% t()
+
+km <- kmeans(df, centers = 3)
+
+twcss <- sapply(1:20, function(k) kmeans(df, k)$tot.withinss)
+qplot(x = 1:20, y = twcss, geom = 'line')
+```
+Based on this, optimal value around 3 centers.
+
+### Km with optimal number of clusters
+```{R}
+km <- kmeans(df, centers = 3)
+```
+```{r}
+#Hidden
+df %>% mutate(clust = factor(km$cluster)) %>%
+  gather(., key = "var", value = "value", -c(crim, clust)) %>%
+  ggplot(aes(value, crim, color = clust)) + 
+  geom_point(shape = 1, size = 1.5, stroke = 1, alpha = .3) + 
+  facet_wrap(~var, scales = "free_x")
+```
+```{R}
+#Hidden
+cor(df) %>% corrplot(method = "pie", type = "upper")
+```
+Tax, 
+
+## Bonus
+```{r}
+# Add clusters of 3-centered kmeans to normalized boston dataset and remove variable crim
+df %<>% mutate(clust = factor(km$cluster)) %>% select(-crim)
+lda.clust <- lda(clust ~ ., data = df)
+lda.clust
+```
+```{r}
+#Hidden
+points <- data.frame(clust = df$clust,
+                     lda = predict(lda.clust)$x)
+names(points) <- c("Cluster", "LD1", "LD2")
+
+arrows <- coef(lda.clust) %>% 
+  data.frame(., label = str_to_upper(rownames(.))) %>% 
+  arrange(desc(abs(LD1))) %>% 
+  # Scale the arrows 
+  mutate(LD1 = LD1*5, LD2 = LD2*5, pos = 1) 
+
+ggplot(points) +
+  theme_minimal() +
+  geom_point(aes(LD1, LD2, color = Cluster), 
+             shape = 1, size = 2, stroke = 1.5, alpha = .75) +
+  geom_segment(data = arrows, 
+               aes(y=0, x=0, yend=LD2, xend=LD1, alpha = .5), 
+               arrow = arrow(length = unit(0.075, "inches")),
+               show.legend = F) +
+  # Adjust the labels .2 units away from the arrowhead
+  geom_text(data = arrows, aes(x = LD1+.2*(LD1/sqrt(LD1^2+LD2^2)), 
+                               y = LD2+.2*(LD2/sqrt(LD1^2+LD2^2)), 
+                               hjust = .5,
+                               label = label), 
+            show.legend = F) 
+```
+The strongest predictors of clusters are tax, nox, zn, and age. 
+
+## Superbonus
+```{R}
+model_predictors <- dplyr::select(train, -crim) %>% 
+  mutate(chas = as.numeric(chas))
+
+# check the dimensions
+data.frame(dim(model_predictors), dim(lda.fit$scaling))
+
+# matrix multiplication
+matrix_product <- as.matrix(model_predictors) %*% lda.fit$scaling
+matrix_product <- as.data.frame(matrix_product) 
+head(matrix_product)
+```
+```{r}
+#Hidden
+p1 <- plot_ly(data = matrix_product, x = ~LD1, y = ~LD2, z = ~LD3, 
+        type= 'scatter3d', mode='markers', color = train$crim, 
+        marker = list(size = 3, width = 2), scene = "scene1") 
+
+# I run the Kmeans modeling with all observations, so I need to either adjust by selecting only relevant observations 
+train_km <- as.data.frame(km$cluster)[sample_ind,] %>% as.factor()
+
+p2 <- plot_ly(data = matrix_product, x = ~LD1, y = ~LD2, z = ~LD3, 
+        type= 'scatter3d', mode='markers', color = train_km,
+        marker = list(size = 3, width = 2), scene = "scene2")
+
+subplot(p1,p2) %>% 
+  layout(scene1 = list(domain=list(x=c(0,0.5),y=c(0,1)), 
+                       xaxis = list(title = "LD1"), 
+                       yaxis = list(title = "LD2"),
+                       zaxis = list(title = "LD3")),
+         scene2 = list(domain=list(x=c(0.5,1),y=c(0,1)),
+                       xaxis = list(title = "LD1"), 
+                       yaxis = list(title = "LD2"),
+                       zaxis = list(title = "LD3")))
+```
+
+Most obvious difference is of course that the first lda-plot has 4 classes whereas the km-plot only has 3. Clustering is done fairly similarly, both models easily distinguish the group with very positive LD1 values. Kmeans seems to achieve (at least visually judging) better separation in the other, larger, cluster.

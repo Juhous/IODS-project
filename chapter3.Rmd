@@ -4,18 +4,26 @@
 The code used for data wrangling exercise can be found [here](https://github.com/Juhous/IODS-project/blob/master/create_alc.R)
 
 ## Load data
-```{r}
+```{r, message=F}
+#Hidden
+library(knitr)
+library(kableExtra)
 library(ggplot2)
 library(GGally)
 library(tidyr)
-library(dplyr, warn.conflicts = F)
 library(stringr)
-source(paste(getwd(),"multiplot.R", sep="/"))
-
+library(dplyr, warn.conflicts = F)
+source("helper_functions.R")
+library(pROC)
+```
+```{R}
 df <- read.table("http://s3.amazonaws.com/assets.datacamp.com/production/course_2218/datasets/alc.txt", sep=",", head = T) %>% tbl_df()
-
-df
-summary(df)
+```
+```{r}
+#Hidden
+summaryKable(df) %>% kable("html", align = "rrr") %>%
+  kable_styling(bootstrap_options = c("hover", "condensed")) %>% 
+  scroll_box(width = "100%")
 ```
 So, the data explores school performance of portuguese students. This set contains information of 382 students, their grades and several variables that might correlate with performance.
 
@@ -26,15 +34,18 @@ I thought that good family relations and extra-curricular activities would prote
 mod <- df %>% select(high_use, famrel, activities, absences, goout) 
 mod
 
-mod %>% select(famrel:goout) %>% sapply(., function(variable_value) table(mod$high_use, variable_value))
+mod %>% select(famrel:goout) %>% 
+  sapply(., function(variable_value) table(mod$high_use, variable_value))
+```
 
+```{r}
+#Hidden
 p1 <-  ggplot(mod, aes(high_use, famrel)) + geom_boxplot() 
 p2 <-  ggplot(mod, aes(high_use, fill = activities)) + geom_bar()
 p3 <-  ggplot(mod, aes(high_use, absences)) + geom_boxplot() 
 p4 <-  ggplot(mod, aes(high_use, goout)) + geom_boxplot() 
 
 multiplot(p1,p2,p3,p4, cols = 2)
-rm(p1,p2,p3,p4, mod)
 ```
 
 These values are well in line with the proposed hypothesis, except for the activities; it seems that extra-curricular activities do not protect from high alcohol usage. 
@@ -43,7 +54,7 @@ These values are well in line with the proposed hypothesis, except for the activ
 ### Model
 ```{r}
 m <- glm(high_use ~ famrel + activities + absences + goout, data = df, family = binomial)
-summary(m)
+summary(m) 
 ```
 Based on the logistic regression model shown above, this hypothesis seems to hold true for all proposed factors
 
@@ -51,21 +62,18 @@ Based on the logistic regression model shown above, this hypothesis seems to hol
 ```{r}
 coef(m)
 OR <- coef(m) %>% exp()
-CI <- confint(m) %>% exp() 
+CI <- suppressMessages(confint(m)) %>% exp() 
 cbind(OR, CI) %>% round(3)
-rm(OR,CI)
 ```
 A step towards better family relationship is associated with odds .731, meaning that a risk for high alcohol usage is reduced. Growing number of absences, going out, and a lack of extra-curricular activities tend to lead to more high alcohol usage. 
 
 ### Predictions
 ```{r}
 df <- mutate(df, prob = predict(m, type = "response"))
-
-library(pROC, warn.conflicts = F)
 plot.roc(df$high_use, df$prob)
 df <- mutate(df, pred = prob > .4)
-
 table(high_use = df$high_use, prediction = df$pred)
+
 table(high_use = df$high_use, prediction = df$pred) %>%
   prop.table() %>% `*`(100) %>% round(2) %>% addmargins()
 ```
@@ -75,14 +83,16 @@ Based on receiver-operating-curve, the threshold for classification should be a 
 ```{r}
 library(boot)
 loss_func <- function(class, prob) {
-  # adjusted for threshold .4
+  # Adjusted for threshold .4
   n_wrong <- abs(class - prob - .1) > .5
   mean(n_wrong)
 }
 loss_func(df$high_use, df$prob)
+# Easier func for counting wrong
+1-(mean(df$high_use == df$pred))
+
 cv <- cv.glm(data = df, cost = loss_func, glmfit = m, K = 10)
 cv$delta[1]
-rm(cv, loss_func)
 ```
-So with 10-fold cross-validation, accurasy decreaes from ~77% to ~75%
+So with 10-fold cross-validation, accuracy decreases from ~77% to ~75%
   

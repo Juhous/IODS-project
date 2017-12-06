@@ -12,6 +12,7 @@ output:
 author: "Juho Pirhonen"
 css: styles.css
 ---
+<script src=showCodePanel.js type="text/javascript" character="UTF-8"></script>
 
 ***
   
@@ -28,4 +29,10 @@ css: styles.css
 ```{r child = "chapter3.Rmd"}
 ```
 
+***
+
+```{r child = "chapter4.Rmd"}
+```
+
+***
 
