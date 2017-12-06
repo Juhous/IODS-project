@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "library(magrittr)\nlibrary(ggplot2)\nlibrary(stringr)\nlibrary(tidyr)\nlibrary(dplyr)\n\nhd <- read.csv(\"http://s3.amazonaws.com/assets.datacamp.com/production/course_2218/datasets/human_development.csv\", \n               stringsAsFactors = F)\ngii <- read.csv(\"http://s3.amazonaws.com/assets.datacamp.com/production/course_2218/datasets/gender_inequality.csv\", \n                stringsAsFactors = F, na.strings = \"..\")\n\nstr(hd)\nstr(gii)\nnames(hd) <- c(\"HDIr\", \"country\", \"HDI\", \"lifeExp\", \"expEdu\", \"meanEdu\", \"GNIC\", \"GNICr-HDIr\")\nnames(gii) <- c(\"GIIr\", \"country\", \"GII\", \"matMort\", \"adolBirthRate\", \"reprParl\", \n                \"edu2F\", \"edu2M\", \"labF\", \"labM\")\nsummary(hd)\nsummary(gii)\n\ngii %<>% mutate(eduRatio = edu2F/edu2M, labRatio = labF/labM)\n\nhuman <- inner_join(gii, hd, by = \"country\")\nglimpse(human)\n\nwrite.csv(human, file = \"data/human.csv\", row.names = F)\n",
+    "created" : 1512565933664.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "91005724",
+    "id" : "37232628",
+    "lastKnownWriteTime" : 1512566865,
+    "last_content_update" : 1512566865613,
+    "path" : "~/Desktop/IODS/IODS-project/create_human.R",
+    "project_path" : "create_human.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
