@@ -1,6 +1,0 @@
-"0","norm.res <- model$residuals/(sqrt(deviance(model)/df.residual(model))*sqrt(1-hatvalues(model)))"
-"0","# Counted the normalized residuals long way for fun. Following code can be used to check results"
-"0","# sum(norm.res != rstandard(model))"
-"0","aa <- analysis$Attitude"
-"0","leverage <- (aa-mean(aa))^2/sum((aa-mean(aa))^2)+1/length(aa)"
-"0","plot(leverage, norm.res, xlab = ""Leverage"", ylab = ""Standardized residuals"")"

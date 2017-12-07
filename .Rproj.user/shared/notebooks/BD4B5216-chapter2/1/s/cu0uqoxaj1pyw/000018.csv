@@ -1,1 +1,0 @@
-"0","plot(cooks.distance(model), norm.res, xlab = ""Cook's distance"", ylab = ""Standardized residuals"")"
