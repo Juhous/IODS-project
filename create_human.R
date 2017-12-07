@@ -27,8 +27,9 @@ gii %<>% mutate(eduRatio = edu2F/edu2M, labRatio = labF/labM)
 human <- inner_join(hd, gii, by = "country")
 glimpse(human)
 
-human %<>% mutate(GNIC = as.numeric(str_replace(GNIC, ",", ".")))
-human %<>% select(country, eduRatio, labRatio, expEdu, lifeExp, 
+human %<>% mutate(GNIC = as.numeric(str_replace(GNIC, ",", "")))
+glimpse(human)
+human %<>% dplyr::select(country, eduRatio, labRatio, expEdu, lifeExp, 
                   GNIC, matMort, adolBirthRate, reprParl)
 glimpse(human)
 
@@ -38,7 +39,7 @@ tail(human,10)
 human <- human[1:155,]
 
 rownames(human) <- human$country
-human %<>% select(-country)
+human %<>% dplyr::select(-country)
 
 glimpse(human)
 

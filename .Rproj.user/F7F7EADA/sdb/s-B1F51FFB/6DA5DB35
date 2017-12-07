@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "hd <- read.csv(\"http://s3.amazonaws.com/assets.datacamp.com/production/course_2218/datasets/human_development.csv\", stringsAsFactors = F)\ngii <- read.csv(\"http://s3.amazonaws.com/assets.datacamp.com/production/course_2218/datasets/gender_inequality.csv\", stringsAsFactors = F, na.strings = \"..\")\nstr(hd)\ndim(hd)\nstr(gii)\ndim(gii)\nsummary(hd)\nsummary(gii)\n\ncolnames(hd)\ncolnames(hd)[3] <- \"HDI\"\ncolnames(hd)[2] <- \"Country\"\ncolnames(hd)[5] <- \"Edu.Exp\"\ncolnames(hd)[7] <- \"GNI\"\ncolnames(hd)[4] <- \"Life.Exp\"\ncolnames(hd)[6] <- \"MYE\"\ncolnames(hd)[8] <- \"GNI_HDI.Rank\"\ncolnames(hd)\n\ncolnames(gii)[3] <- \"GII\"\ncolnames(gii)[4] <- \"Mat.Mor\"\ncolnames(gii)[5] <- \"Ado.Birth\"\ncolnames(gii)[6] <- \"Parli.F\"\ncolnames(gii)[7] <- \"edu2F\"\ncolnames(gii)[8] <- \"edu2M\"\ncolnames(gii)[9] <- \"LabF\"\ncolnames(gii)[10] <- \"LabM\"\ncolnames(gii)\n\n#Mutate the \"Gender inequality\" data and create two new variables. The first one should be the ratio of Female and Male populations with secondary education in each country. (i.e. edu2F / edu2M). The second new variable should be the ratio of labour force participation of females and males in each country (i.e. labF / labM). \n#utate(iris, sepal = Sepal.Length + Sepal. Width)\nlibrary(dplyr)\nEdu2.FM <- (gii$edu2F/gii$edu2M)\nLabo.FM <- c(gii$Labour.Force.Participation.Rate..Female./gii$Labour.Force.Participation.Rate..Male.)\ngii <- mutate(gii, Edu2.FM = (edu2F / edu2M))\ngii <- mutate(gii, Labo.FM = (LabF / LabM))\nstr(hd)\n\n\n\nhelp(\"inner_join\")\nhd_gii <- inner_join(hd, gii, by = c(\"Country\" = \"Country\"), suffix = c(\".hd\", \".gii\"))\nstr(hd_gii)\n\n\n#Mutate the data: transform the Gross National Income (GNI) variable to numeric (Using string manipulation. Note that the mutation of 'human' was not done on DataCamp). (1 point)\n\ntransform(hd_gii, GNI = as.numeric(GNI))\nstr(hd_gii)\n\n#\"Country\", \"Edu2.FM\", \"Labo.FM\", \"Edu.Exp\", \"Life.Exp\", \"GNI\", \"Mat.Mor\", \"Ado.Birth\", \"Parli.F\" \n\nkeep_columns <- c(\"Country\", \"Edu2.FM\", \"Labo.FM\", \"Edu.Exp\", \"Life.Exp\", \"GNI\", \"Mat.Mor\", \"Ado.Birth\", \"Parli.F\")\n\n# select the 'keep_columns' to create a new dataset\nhd_gii <- dplyr::select(hd_gii, one_of(keep_columns))\ndim(hd_gii)\n\n hd_gii[complete.cases(hd_gii), ] %>% dim()\n\n#This was supposed to only keep complete rows, but it didnt work. Hence, I googled and found the na.omit function\nhd_gii <- na.omit(hd_gii)\ndim(hd_gii)\n\n#Then I try to remove the last 7 lines as those are regions:\nhd_gii <- hd_gii[-c(189, 190, 191, 192, 193, 194, 195), ]\n# That didnt work either, so I went back to datacamp and found this: I define the last indices we want to keep in last\nlast <- nrow(hd_gii) - 7\nlast\n# Then I choose everything until the last 7 observations and keep it\nhuman <- hd_gii[1:last, ]\n\n# To add countries as rownames I mutate:\nrownames(human) <- human$Country\n\n\n#Then I need to remove the column \"country\" and write the table including rownames. I am unsusre if I need to define row.names = TRUE, but just to be sure. \nhuman <- dplyr::select(human, -Country)\n\n",
+    "created" : 1512656384197.000,
+    "dirty" : true,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "507108433",
+    "id" : "6DA5DB35",
+    "lastKnownWriteTime" : 4294967297,
+    "last_content_update" : 1512657233949,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

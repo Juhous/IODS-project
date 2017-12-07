@@ -71,7 +71,7 @@ pca %>% summary()
 biplot(pca, choices = 1:2, cex = c(.2,.6))
 ```
 
-Based on this plot, it seems tahat GNI per capita and maternal mortality are the most essential explanatory components of this data set. 
+Based on this plot, it seems tahat GNI per capita is by far the most essential explanatory component of this data set. 
 
 ### 4. PCA on normalized data
 ```{r}
@@ -101,7 +101,7 @@ cbind(orig, scaled) %>% data.frame() %>%
   rename(orig = X1, scaled = X2) %>% round(3) %>% t 
 ```
 
-We can study the how much of the PCA-variance is explained by a variable as shown above. So, we calculate the importance_of_PC*absolute_value_for_variable, and sum this value across PCs for any given variable. From the results, it becomes clear that maternal mortality and GNI per capita were crudely overrepresented in the non-scaled data, most likely because of their high absolute range. With scaled data, the amount of explained variation is distributed fairly equally within variables.
+We can study the how much of the PCA-variance is explained by a variable as shown above. So, we calculate the importance_of_PC*absolute_value_for_variable, and sum this value across PCs for any given variable. From the results, it becomes clear that  GNI per capita was crudely overrepresented in the non-scaled data, most likely because of its high absolute range. With scaled data, the amount of explained variation is distributed fairly equally within variables.
 
 ## 6. MCA with tea dataset
 ```{r}
