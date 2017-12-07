@@ -68,7 +68,7 @@ pca %>% summary()
 ```
 ```{r, warning=F}
 #Hidden
-biplot(pca, choices = 1:2, cex = c(.5,1))
+biplot(pca, choices = 1:2, cex = c(.2,.6))
 ```
 
 Based on this plot, it seems tahat GNI per capita and maternal mortality are the most essential explanatory components of this data set. 
@@ -81,7 +81,7 @@ pca_scaled %>% summary
 ```
 ```{r, warning=F}
 #Hidden
-biplot(pca_scaled, choices = 1:2, cex = c(.5,1))
+biplot(pca_scaled, choices = 1:2, cex = c(.2,.6))
 ```
 
 According to scaled data, there is much more variation to what variables explain most of the variance in the data. Here, PC1 explains 50% of variation and most important determinary variables are maternal mortality, life expectancy and so forth. PC2 only explains 16%, and the most significant variables are labour ratio and parliamentary representation. 
